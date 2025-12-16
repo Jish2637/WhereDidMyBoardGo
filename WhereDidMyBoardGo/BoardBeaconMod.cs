@@ -51,7 +51,7 @@ namespace BoardBeaconMod
         // Hand must be at least this far from headset (meters) to count as “arm extended”.
         // Why:
         //   We want a “deliberate gesture” so the beacon doesn’t flicker when casually gripping.
-        static float ArmExtendedMeters = 0.55f;
+        static float ArmExtendedMeters = 0.25f;
 
         // Consider grip “active” if analog grip exceeds this threshold (0..1).
         // Why:
@@ -61,7 +61,7 @@ namespace BoardBeaconMod
         // If the board is already close enough to see naturally, suppress the beacon.
         // Why:
         //   Prevents visual clutter and avoids “beacon spam” in normal riding flow.
-        static float MinBoardDistanceForBeacon = 4.0f;
+        static float MinBoardDistanceForBeacon = 0.4f;
 
         // Beacon visuals (purely cosmetic)
         static float BeaconHeight = 180f; // world-space height (very tall so it’s visible at distance)
@@ -231,11 +231,15 @@ namespace BoardBeaconMod
             //   This is exactly what a consumer mod *should* do: use the bridge’s “best” board target.
             Vector3 boardPos = s.Board.ActualWorld.position;
 
-            // 5) Distance gate:
-            // If the board is already near the headset, suppress the beacon.
-            // Why:
-            //   When the board is close, the player can usually see it without a beacon.
-            float boardDist = Vector3.Distance(s.Headset.position, boardPos);
+            // 5) Distance gate (horizontal):
+            // Use horizontal distance only (XZ plane) because vertical offsets (VR rig height, ramps, bowls)
+            // can make full 3D distance a poor proxy for "can I see it?".
+            Vector3 playerBase = s.Headset.position;
+
+            Vector3 delta = boardPos - playerBase;
+            delta.y = 0f;
+            float boardDist = delta.magnitude;
+
             if (boardDist < MinBoardDistanceForBeacon)
             {
                 SetBeaconVisible(false);
@@ -580,13 +584,13 @@ namespace BoardBeaconMod
 # Edit values and save; the mod hot-reloads changes while running.
 
 # Hand must be at least this far from headset to count as ""arm extended"" (meters).
-ArmExtendedMeters=0.55
+ArmExtendedMeters=0.25
 
 # Grip analog threshold (0..1) to count as ""grip held"".
 AnalogGripThreshold=0.60
 
 # If board is closer than this distance (meters), don't show the beacon.
-MinBoardDistanceForBeacon=4.0
+MinBoardDistanceForBeacon=0.4
 
 # Beacon visuals
 BeaconHeight=180
