@@ -30,7 +30,7 @@ using VS.ModBridge; // <- IMPORTANT: This is the dependency we’re demonstratin
 using Object = UnityEngine.Object;
 
 // MelonLoader metadata for the mod.
-[assembly: MelonInfo(typeof(BoardBeaconMod.BoardBeaconEntry), "VS Board Beacon", "1.1.0", "Josh2367")]
+[assembly: MelonInfo(typeof(BoardBeaconMod.BoardBeaconEntry), "VS Board Beacon", "1.2.0", "Josh2367")]
 
 // Example Mod for VS Skate
 namespace BoardBeaconMod
